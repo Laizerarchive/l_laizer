@@ -36,16 +36,12 @@ body {
 .bottom-image {
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
 
-    width: 100vw;
-    height: 100px;
+    transform: translateX(-50%);
 
-    background-image: url('bottom@2x.png');
-
-    background-size: cover;
-    background-position: bottom center;
-    background-repeat: no-repeat;
+    width: 100%;
+    height: auto;
 
     z-index: -100;
 
