@@ -257,31 +257,36 @@ body, html {
 }
 
 /* Links under player */
-.audio-links {
+.platform-links {
+    position: fixed;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
 }
 
-.retro-link-btn {
-    padding: 8px 16px;
-    background: silver;
-    border-top: 1px solid #fff;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #0a0a0a;
-    border-bottom: 1px solid #0a0a0a;
-    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px grey;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: 'Pixelated MS Sans Serif', Arial;
+.platform-links a {
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 8px 14px;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0px black;
+    transition: 0.15s;
+    width: 150px;
 }
 
-.retro-link-btn:active {
-    box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff;
-    border-top: 1px solid grey;
-    border-left: 1px solid grey;
-    border-right: 1px solid #dfdfdf;
-    border-bottom: 1px solid #dfdfdf;
+.platform-links a:hover {
+    transform: translateX(5px);
 }
+
+.spotify { background: #1DB954; color: black; }
+.apple { background: #d9d9d9; color: black; }
+.youtube { background: #ff0000; color: white; }
+.soundcloud { background: #ff7700; color: white; }
+.bandcamp { background: #629aa9; color: white; }
+.tidal { background: black; color: white; }
+.amazon { background: #00A8E1; color: black; }
