@@ -15,7 +15,7 @@
     </div>
 
     <!-- Audio Player Window -->
-    <div class="window" id="audioPlayerContainer" style="position: fixed; bottom: 100px; left: 20px; z-index: 1000; width: 450px;">
+    <div class="window" id="audioPlayerContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);z-index: 1000;width: 450px;">
         <div class="title-bar">
             <div class="title-bar-text">Music Player</div>
             <div class="title-bar-controls">
@@ -55,30 +55,70 @@
     </div>
 <!-- Streaming Platform Links -->
 <div class="audio-links" style="
+    .platform-links {
     position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 999;
-    width: 450px;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-">
+    flex-direction: column;
+    gap: 12px;
 
-    <a href="https://spotify.com" target="_blank" class="retro-link-btn">Spotify</a>
+    z-index: 999;
+}
 
-    <a href="https://music.apple.com" target="_blank" class="retro-link-btn">Apple Music</a>
+.platform-links a {
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 8px 14px;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0px black;
+    transition: 0.15s;
+    width: 150px;
+}
 
-    <a href="https://youtube.com" target="_blank" class="retro-link-btn">YouTube</a>
+.platform-links a:hover {
+    transform: translateX(5px);
+}
 
-    <a href="https://soundcloud.com" target="_blank" class="retro-link-btn">SoundCloud</a>
+/* Platform Colors */
 
-    <a href="https://bandcamp.com" target="_blank" class="retro-link-btn">Bandcamp</a>
+.spotify {
+    background: #1DB954;
+    color: black;
+}
 
-    <a href="https://tidal.com" target="_blank" class="retro-link-btn">Tidal</a>
+.apple {
+    background: #d9d9d9;
+    color: black;
+}
 
-    <a href="https://music.amazon.com" target="_blank" class="retro-link-btn">Amazon Music</a>
+.youtube {
+    background: #ff0000;
+    color: white;
+}
+
+.soundcloud {
+    background: #ff7700;
+    color: white;
+}
+
+.bandcamp {
+    background: #629aa9;
+    color: white;
+}
+
+.tidal {
+    background: black;
+    color: white;
+}
+
+.amazon {
+    background: #00A8E1;
+    color: black;
+}
 
 </div>
     <script src="script.js"></script>
