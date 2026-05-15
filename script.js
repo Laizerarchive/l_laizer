@@ -34,8 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                         localStorage.setItem('laizerDreams', JSON.stringify(dreams));
                         
-                        // Redirect to archive
-                        window.location.href = 'archive.html';
+                        // Add delay before redirect to show completed progress bar
+                        setTimeout(() => {
+                            window.location.href = 'archive.html';
+                        }, 500);
                     }
                     loadingBar.style.width = `${progress}%`;
                 }, 100);
