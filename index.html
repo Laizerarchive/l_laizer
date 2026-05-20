@@ -11,38 +11,46 @@
 <body>
     <div class="background-container"></div>
     <img src="bottom@2x.png" class="bottom-image">
-    <div class="content-wrapper">
-        <div class="logo-container">
-            <img src="logo.png" alt="Laizer Logo" class="logo">
-        </div>
+    
+    <!-- Archive Container - shows all dreams in background -->
+    <div class="archive-container" id="dreamsArchiveContainer">
+        <!-- Dreams will be dynamically inserted here -->
+    </div>
 
-        <div class="window main-window">
-            <div class="title-bar">
-                <div class="title-bar-text">Welcome</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Minimize"></button>
-                    <button aria-label="Maximize"></button>
-                    <button aria-label="Close"></button>
-                </div>
+    <!-- Input Window - overlay on top -->
+    <div class="window main-window" id="inputWindow" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+        <div class="title-bar">
+            <div class="title-bar-text">Welcome</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
             </div>
-            <div class="window-body">
-                <p>What was your childhood dream?</p>
-                <div class="field-row-stacked">
-                    <!-- Textarea for the input with blinking cursor feel -->
-                    <textarea id="dreamInput" rows="5" class="dream-textarea"></textarea>
-                </div>
-                
-                <!-- Loading Simulation -->
-                <div id="loadingContainer" style="display: none; margin-top: 15px;">
-                    <div class="progress-indicator-container">
-                        <div class="progress-bar-fill" id="loadingBar"></div>
-                    </div>
-                    <p style="font-size: 11px; text-align: left; margin-top: 5px; margin-bottom: 0;">Loading...</p>
-                </div>
+        </div>
+        <div class="window-body">
+            <p>What was your childhood dream?</p>
+            
+            <label for="dreamUsername">Your Name:</label>
+            <div class="field-row-stacked">
+                <input type="text" id="dreamUsername" class="dream-input" placeholder="Enter your name">
+            </div>
 
-                <div class="button-container" id="sendBtnContainer">
-                    <button id="sendBtn">Send</button>
+            <label for="dreamInput">Your Dream:</label>
+            <div class="field-row-stacked">
+                <!-- Textarea for the input with blinking cursor feel -->
+                <textarea id="dreamInput" rows="5" class="dream-textarea"></textarea>
+            </div>
+            
+            <!-- Loading Simulation -->
+            <div id="loadingContainer" style="display: none; margin-top: 15px;">
+                <div class="progress-indicator-container">
+                    <div class="progress-bar-fill" id="loadingBar"></div>
                 </div>
+                <p style="font-size: 11px; text-align: left; margin-top: 5px; margin-bottom: 0;">Loading...</p>
+            </div>
+
+            <div class="button-container" id="sendBtnContainer">
+                <button id="sendBtn">Send</button>
             </div>
         </div>
     </div>
