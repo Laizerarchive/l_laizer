@@ -41,7 +41,7 @@ body {
     transform: translateX(-50%);
 
     width: 100%;
-    height: auto;
+    height: 100%;
 
     z-index: -100;
 
