@@ -74,17 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedDate = dreamDate.toLocaleString();
 
         dreamEl.innerHTML = `
-            <div class="title-bar" style="background: ${randomColor};">
-                <div class="title-bar-text">${escapeHTML(dream.username)}</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close" class="close-btn"></button>
-                </div>
-            </div>
-            <div class="window-body">
-                <p class="dream-text-content">${escapeHTML(dream.text)}</p>
-                <div class="timestamp">${formattedDate}</div>
-            </div>
-        `;
+             <div class="title-bar" style="background: ${randomColor};">
+        <div class="title-bar-text">dream.txt</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close" class="close-btn"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <p class="dream-text-content">${escapeHTML(dream.text)}</p>
+        <div class="timestamp">${formattedDate}</div>
+    </div>
+`;
 
         const closeBtn = dreamEl.querySelector('.close-btn');
         closeBtn.addEventListener('click', () => {
