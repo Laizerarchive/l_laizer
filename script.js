@@ -26,7 +26,7 @@ const db = getFirestore(app);
 document.addEventListener('DOMContentLoaded', () => {
     const sendBtn = document.getElementById('sendBtn');
     const dreamInput = document.getElementById('dreamInput');
-    const dreamUsername = document.getElementById('dreamUsername');
+
     const archiveContainer = document.getElementById('dreamsArchiveContainer');
     const inputWindow = document.getElementById('inputWindow');
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = docItem.data();
 
                 const dream = {
-                    username: data.username || 'Anonymous',
+                    username:'',
                     text: data.text || '',
                     date: data.createdAt?.toDate?.() || new Date()
                 };
@@ -96,14 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
         archiveContainer.appendChild(dreamEl);
     }
 
-    if (sendBtn && dreamInput && dreamUsername) {
+    if (sendBtn && dreamInput) {
         dreamInput.focus();
 
         sendBtn.addEventListener('click', async () => {
-            const username = dreamUsername.value.trim();
+            
             const text = dreamInput.value.trim();
 
-            if (!username || !text) {
+            if (!text) {
                 alert("Please enter your name and your dream.");
                 return;
             }
@@ -126,10 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     try {
                         await addDoc(collection(db, "dreams"), {
-                            username: username,
-                            text: text,
-                            createdAt: serverTimestamp()
-                        });
+    text: text,
+    createdAt: serverTimestamp()
+});
 
                         dreamUsername.value = '';
                         dreamInput.value = '';
