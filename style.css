@@ -404,3 +404,23 @@ body {
 .retro-link-btn:hover {
     transform: translateY(-3px);
 }
+
+/* Dream Submit Window Labels */
+#dreamSubmitWindow label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+#dreamSubmitWindow input[type="text"] {
+    border: inset 2px #dfdfdf;
+    padding: 4px;
+    font-family: Arial, sans-serif;
+    background: #fff;
+}
+
+#dreamSubmitWindow textarea {
+    border: inset 2px #dfdfdf;
+    padding: 4px;
+}
