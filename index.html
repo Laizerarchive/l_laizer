@@ -4,20 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laizer - Childhood Dream</title>
-    <!-- Using 98.css for the retro Windows aesthetic -->
     <link rel="stylesheet" href="https://unpkg.com/98.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="background-container"></div>
     <img src="bottom@2x.png" class="bottom-image">
-    
-    <!-- Archive Container - shows all dreams in background -->
-    <div class="archive-container" id="dreamsArchiveContainer">
-        <!-- Dreams will be dynamically inserted here -->
-    </div>
 
-    <!-- Input Window - overlay on top -->
     <div class="window main-window" id="inputWindow" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
         <div class="title-bar">
             <div class="title-bar-text">Welcome</div>
@@ -27,17 +20,15 @@
                 <button aria-label="Close"></button>
             </div>
         </div>
+
         <div class="window-body">
             <p>What was your childhood dream?</p>
-            
-            <label for="dreamUsername">Your Name:</label>
+
+            <label for="dreamInput">Your Message:</label>
             <div class="field-row-stacked">
-                <input type="text" id="dreamUsername" class="dream-input" placeholder="Enter your name">
+                <textarea id="dreamInput" rows="5" class="dream-textarea" placeholder="Write your message here"></textarea>
             </div>
 
-        
-            
-            <!-- Loading Simulation -->
             <div id="loadingContainer" style="display: none; margin-top: 15px;">
                 <div class="progress-indicator-container">
                     <div class="progress-bar-fill" id="loadingBar"></div>
@@ -51,6 +42,6 @@
         </div>
     </div>
 
-   <script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
