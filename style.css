@@ -89,6 +89,18 @@ body {
     font-size: 16px;
 }
 
+/* Input field styling */
+.dream-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px;
+    border: inset 2px #dfdfdf;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
 /* Text area styling */
 .dream-textarea {
     width: 100%;
@@ -96,6 +108,8 @@ body {
     resize: none;
     font-family: 'Pixelated MS Sans Serif', Arial;
     font-size: 14px;
+    padding: 4px;
+    border: inset 2px #dfdfdf;
 }
 
 .button-container {
@@ -136,7 +150,7 @@ body {
 .archive-container {
     position: relative;
     width: 100vw;
-    height: calc(100vh - 60px); /* Leave space for taskbar */
+    height: 100vh;
     padding: 20px;
     box-sizing: border-box;
 }
@@ -405,22 +419,18 @@ body {
     transform: translateY(-3px);
 }
 
-/* Dream Submit Window Labels */
-#dreamSubmitWindow label {
+/* Labels in main window */
+.main-window label {
     display: block;
+    margin-top: 10px;
     margin-bottom: 5px;
     font-weight: bold;
     font-size: 12px;
 }
 
-#dreamSubmitWindow input[type="text"] {
-    border: inset 2px #dfdfdf;
-    padding: 4px;
-    font-family: Arial, sans-serif;
-    background: #fff;
-}
-
-#dreamSubmitWindow textarea {
-    border: inset 2px #dfdfdf;
-    padding: 4px;
+/* Field row stacked */
+.field-row-stacked {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
 }
