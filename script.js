@@ -85,13 +85,14 @@ function makeDraggable(element) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing...');
 
-    // ========== INDEX PAGE (Input Page) ==========
+    // ========== INDEX PAGE (SMS Chat Input) ==========
     const sendBtn = document.getElementById('sendBtn');
     const dreamInput = document.getElementById('dreamInput');
     const inputWindow = document.getElementById('inputWindow');
+    const smsMessages = document.getElementById('smsMessages');
 
-    if (sendBtn && dreamInput && inputWindow) {
-        console.log('Index page detected');
+    if (sendBtn && dreamInput && inputWindow && smsMessages) {
+        console.log('Index SMS chat page detected');
         dreamInput.focus();
 
         sendBtn.addEventListener('click', async () => {
@@ -101,6 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Please enter your dream.");
                 return;
             }
+
+            // Add message to chat immediately
+            const messageBubble = document.createElement('div');
+            messageBubble.className = 'sms-bubble sent';
+            messageBubble.innerHTML = `<p>${escapeHTML(text)}</p>`;
+            smsMessages.appendChild(messageBubble);
+            smsMessages.scrollTop = smsMessages.scrollHeight;
 
             const loadingContainer = document.getElementById('loadingContainer');
             const loadingBar = document.getElementById('loadingBar');
@@ -145,69 +153,73 @@ document.addEventListener('DOMContentLoaded', () => {
         makeDraggable(inputWindow);
     }
 
-    // ========== ARCHIVE PAGE (Dreams Display) ==========
+    // ========== ARCHIVE PAGE (Dreams Display as SMS bubbles above player) ==========
     const archiveContainer = document.getElementById('dreamsArchiveContainer');
 
     if (archiveContainer) {
         console.log('Archive page detected');
 
-        function createDreamWindow(dream, index) {
-            const dreamEl = document.createElement('div');
-            dreamEl.className = 'window dream-window';
+        function createSmsChatWindow(dreams) {
+            if (dreams.length === 0) return;
 
-            const padding = 20;
-            const maxLeft = window.innerWidth - 320;
-            const maxTop = window.innerHeight - 200;
+            const chatWindow = document.createElement('div');
+            chatWindow.className = 'window sms-archive-window';
+            chatWindow.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 500; width: 400px; height: 300px; max-height: calc(50% - 400px);';
 
-            const randomLeft = padding + Math.random() * (maxLeft > 0 ? maxLeft : 10);
-            const randomTop = padding + Math.random() * (maxTop > 0 ? maxTop : 10);
-
-            dreamEl.style.left = `${randomLeft}px`;
-            dreamEl.style.top = `${randomTop}px`;
-            dreamEl.style.zIndex = index + 10;
-
-            const randomHue = Math.floor(Math.random() * 360);
-            const randomColor = `hsl(${randomHue}, 70%, 40%)`;
-
-            const dreamDate = new Date(dream.date);
-            const formattedDate = dreamDate.toLocaleString();
-
-            dreamEl.innerHTML = `
-                <div class="title-bar" style="background: ${randomColor};">
-                    <div class="title-bar-text">dream.txt</div>
-                    <div class="title-bar-controls">
-                        <button aria-label="Close" class="close-btn"></button>
-                    </div>
-                </div>
-                <div class="window-body">
-                    <p class="dream-text-content">${escapeHTML(dream.text)}</p>
-                    <div class="timestamp">${formattedDate}</div>
+            const titleBar = document.createElement('div');
+            titleBar.className = 'title-bar';
+            titleBar.innerHTML = `
+                <div class="title-bar-text">💬 All Dreams</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close" class="close-btn"></button>
                 </div>
             `;
 
-            const closeBtn = dreamEl.querySelector('.close-btn');
-            closeBtn.addEventListener('click', () => {
-                dreamEl.style.display = 'none';
+            const chatBody = document.createElement('div');
+            chatBody.style.cssText = 'flex: 1; overflow-y: auto; padding: 10px; background: #c0c0c0; border: inset 2px #dfdfdf; display: flex; flex-direction: column; gap: 8px;';
+
+            dreams.forEach(dream => {
+                const bubble = document.createElement('div');
+                bubble.className = 'sms-bubble received';
+                bubble.innerHTML = `<p>${escapeHTML(dream.text)}</p>`;
+                chatBody.appendChild(bubble);
             });
 
-            makeDraggable(dreamEl);
-            archiveContainer.appendChild(dreamEl);
+            chatWindow.appendChild(titleBar);
+            chatWindow.appendChild(chatBody);
+
+            const closeBtn = chatWindow.querySelector('.close-btn');
+            closeBtn.addEventListener('click', () => {
+                chatWindow.style.display = 'none';
+            });
+
+            makeDraggable(chatWindow);
+            archiveContainer.appendChild(chatWindow);
         }
 
+        // Load dreams
         const q = query(collection(db, "dreams"), orderBy("createdAt", "desc"));
+        let allDreams = [];
 
         onSnapshot(q, (snapshot) => {
-            archiveContainer.innerHTML = '';
+            allDreams = [];
             console.log('Dreams loaded:', snapshot.docs.length);
 
-            snapshot.forEach((docItem, index) => {
+            snapshot.forEach((docItem) => {
                 const data = docItem.data();
-                const dream = {
-                    text: data.text || '',
-                    date: data.createdAt?.toDate?.() || new Date()
-                };
-                createDreamWindow(dream, index);
+                allDreams.push({
+                    text: data.text || ''
+                });
             });
+
+            // Remove old chat window if exists
+            const oldWindow = archiveContainer.querySelector('.sms-archive-window');
+            if (oldWindow) oldWindow.remove();
+
+            // Create new one with updated dreams
+            if (allDreams.length > 0) {
+                createSmsChatWindow(allDreams);
+            }
         }, (error) => {
             console.error("Error loading dreams:", error);
         });
