@@ -24,11 +24,70 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 document.addEventListener('DOMContentLoaded', () => {
+    // ========== INDEX PAGE (Input Page) ==========
     const sendBtn = document.getElementById('sendBtn');
     const dreamInput = document.getElementById('dreamInput');
-
-    const archiveContainer = document.getElementById('dreamsArchiveContainer');
     const inputWindow = document.getElementById('inputWindow');
+
+    if (sendBtn && dreamInput) {
+        dreamInput.focus();
+
+        sendBtn.addEventListener('click', async () => {
+            const text = dreamInput.value.trim();
+
+            if (!text) {
+                alert("Please enter your dream.");
+                return;
+            }
+
+            const loadingContainer = document.getElementById('loadingContainer');
+            const loadingBar = document.getElementById('loadingBar');
+            const sendBtnContainer = document.getElementById('sendBtnContainer');
+
+            sendBtnContainer.style.display = 'none';
+            loadingContainer.style.display = 'block';
+
+            let progress = 0;
+
+            const interval = setInterval(async () => {
+                progress += Math.random() * 20;
+
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+
+                    try {
+                        await addDoc(collection(db, "dreams"), {
+                            text: text,
+                            createdAt: serverTimestamp()
+                        });
+
+                        dreamInput.value = '';
+                        dreamInput.focus();
+
+                        window.location.href = "archive.html";
+                    } catch (error) {
+                        console.error("Error adding dream:", error);
+                        alert("Message was not sent. Please try again.");
+                    }
+
+                    setTimeout(() => {
+                        loadingContainer.style.display = 'none';
+                        sendBtnContainer.style.display = 'flex';
+                    }, 500);
+                }
+
+                loadingBar.style.width = `${progress}%`;
+            }, 100);
+        });
+
+        if (inputWindow) {
+            makeDraggable(inputWindow);
+        }
+    }
+
+    // ========== ARCHIVE PAGE (Dreams Display) ==========
+    const archiveContainer = document.getElementById('dreamsArchiveContainer');
 
     function loadAndDisplayDreams() {
         if (!archiveContainer) return;
@@ -42,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = docItem.data();
 
                 const dream = {
-                    username:'',
                     text: data.text || '',
                     date: data.createdAt?.toDate?.() || new Date()
                 };
@@ -74,17 +132,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedDate = dreamDate.toLocaleString();
 
         dreamEl.innerHTML = `
-             <div class="title-bar" style="background: ${randomColor};">
-        <div class="title-bar-text">dream.txt</div>
-        <div class="title-bar-controls">
-            <button aria-label="Close" class="close-btn"></button>
-        </div>
-    </div>
-    <div class="window-body">
-        <p class="dream-text-content">${escapeHTML(dream.text)}</p>
-        <div class="timestamp">${formattedDate}</div>
-    </div>
-`;
+            <div class="title-bar" style="background: ${randomColor};">
+                <div class="title-bar-text">dream.txt</div>
+                <div class="title-bar-controls">
+                    <button aria-label="Close" class="close-btn"></button>
+                </div>
+            </div>
+            <div class="window-body">
+                <p class="dream-text-content">${escapeHTML(dream.text)}</p>
+                <div class="timestamp">${formattedDate}</div>
+            </div>
+        `;
 
         const closeBtn = dreamEl.querySelector('.close-btn');
         closeBtn.addEventListener('click', () => {
@@ -92,75 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         makeDraggable(dreamEl);
-
         archiveContainer.appendChild(dreamEl);
-    }
-
-    if (sendBtn && dreamInput) {
-        dreamInput.focus();
-
-        sendBtn.addEventListener('click', async () => {
-            
-            const text = dreamInput.value.trim();
-
-            if (!text) {
-                alert("Please enter your dream.");
-                return;
-            }
-
-            const loadingContainer = document.getElementById('loadingContainer');
-            const loadingBar = document.getElementById('loadingBar');
-            const sendBtnContainer = document.getElementById('sendBtnContainer');
-
-            sendBtnContainer.style.display = 'none';
-            loadingContainer.style.display = 'block';
-
-            let progress = 0;
-
-            const interval = setInterval(async () => {
-                progress += Math.random() * 20;
-
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-
-                    try {
-                        await addDoc(collection(db, "dreams"), {
-    text: text,
-    createdAt: serverTimestamp()
-});
-
-                        dreamInput.value = '';
-                        dreamInput.focus();
-
-                        window.location.href = "archive.html";
-                    } catch (error) {
-                        console.error("Error adding dream:", error);
-                        alert("Message was not sent. Please try again.");
-                    }
-
-                    setTimeout(() => {
-                        loadingContainer.style.display = 'none';
-                        sendBtnContainer.style.display = 'flex';
-                    }, 500);
-                }
-
-                loadingBar.style.width = `${progress}%`;
-            }, 100);
-        });
     }
 
     loadAndDisplayDreams();
 
-    if (inputWindow) {
-        makeDraggable(inputWindow);
-    }
-
+    // ========== AUDIO PLAYER (Archive Page) ==========
     const audioPlayerContainer = document.getElementById('audioPlayerContainer');
-    if (audioPlayerContainer) {
-        makeDraggable(audioPlayerContainer);
-    }
-
     const audioPlayer = document.getElementById('mainAudioPlayer');
     const btnPlay = document.getElementById('btnPlay');
     const btnPause = document.getElementById('btnPause');
@@ -169,6 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioDisplay = document.getElementById('audioDisplay');
     const listenBtn = document.getElementById('listenBtn');
     const platformLinks = document.getElementById('platformLinks');
+
+    if (audioPlayerContainer) {
+        makeDraggable(audioPlayerContainer);
+    }
 
     // Format time for display
     function formatTime(seconds) {
@@ -181,7 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioPlayer && btnPlay && btnPause && btnStop && progressBar) {
         // Update display when metadata loads
         audioPlayer.addEventListener('loadedmetadata', () => {
-            audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
+            if (audioDisplay) {
+                audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
+            }
         });
 
         btnPlay.addEventListener('click', () => {
@@ -195,13 +197,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btnStop.addEventListener('click', () => {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
-            audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
+            if (audioDisplay) {
+                audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
+            }
         });
 
         audioPlayer.addEventListener('timeupdate', () => {
             if (audioPlayer.duration) {
                 progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                audioDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+                if (audioDisplay) {
+                    audioDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
+                }
             }
         });
 
@@ -215,11 +221,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listen button - toggle platform links
     if (listenBtn && platformLinks) {
         listenBtn.addEventListener('click', () => {
-            platformLinks.style.display = platformLinks.style.display === 'none' ? 'flex' : 'none';
-            listenBtn.classList.toggle('active');
+            if (platformLinks.style.display === 'none' || platformLinks.style.display === '') {
+                platformLinks.style.display = 'flex';
+                listenBtn.classList.add('active');
+            } else {
+                platformLinks.style.display = 'none';
+                listenBtn.classList.remove('active');
+            }
         });
     }
 
+    // ========== UTILITY FUNCTIONS ==========
     function makeDraggable(element) {
         const titleBar = element.querySelector('.title-bar');
         if (!titleBar) return;
