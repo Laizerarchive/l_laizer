@@ -34,21 +34,7 @@ body {
     z-index: -999;
 }
 
-.bottom-image {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
 
-    transform: translateX(-50%);
-
-    width: 100%;
-    height: auto;
-
-    z-index: -100;
-
-    pointer-events: none;
-    display: none;
-}
 
 /* Base styling */
 .content-wrapper {
