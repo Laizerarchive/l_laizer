@@ -214,45 +214,93 @@
 
   </div>
 
-  <script>
 
-    const smsInput = document.getElementById("smsInput");
-    const smsSend = document.getElementById("smsSend");
+<script type="module">
 
-    smsSend.addEventListener("click", sendMessage);
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    smsInput.addEventListener("keydown", (e) => {
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      if (e.key === "Enter") {
-        sendMessage();
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAC5ulcLBtrRbmQ4deK1HTOQ5LPSbR7-78",
+  authDomain: "laizer-e5803.firebaseapp.com",
+  projectId: "laizer-e5803",
+  storageBucket: "laizer-e5803.firebasestorage.app",
+  messagingSenderId: "719956823015",
+  appId: "1:719956823015:web:cd83b1536824c8127a0b42",
+  measurementId: "G-6L04YDQTRR"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+const smsInput =
+  document.getElementById("smsInput");
+
+const smsSend =
+  document.getElementById("smsSend");
+
+
+smsSend.addEventListener("click", sendMessage);
+
+
+smsInput.addEventListener("keydown", (e) => {
+
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+
+});
+
+
+async function sendMessage() {
+
+  const text = smsInput.value.trim();
+
+  if (!text) return;
+
+  try {
+
+    await addDoc(
+      collection(db, "laizerMessages"),
+      {
+        name:
+          "visitor_" +
+          Math.floor(Math.random() * 9999),
+
+        text: text,
+
+        createdAt: serverTimestamp()
       }
+    );
 
-    });
+    window.location.href =
+      "archive.html";
 
-    function sendMessage() {
+  }
 
-      const text = smsInput.value.trim();
+  catch (error) {
 
-      if (!text) return;
+    console.error(error);
 
-      const savedMessages =
-        JSON.parse(localStorage.getItem("laizerMessages")) || [];
+    alert("Error sending message");
 
-      savedMessages.push({
-        name: "visitor_" + Math.floor(Math.random() * 9999),
-        text: text
-      });
+  }
 
-      localStorage.setItem(
-        "laizerMessages",
-        JSON.stringify(savedMessages)
-      );
+}
 
-      window.location.href = "archive.html";
-
-    }
-
-  </script>
+</script>
 
 </body>
 
