@@ -302,121 +302,137 @@
 
   </div>
 
-  <script>
+<script type="module">
 
-    const smsChat =
-      document.getElementById("smsChat");
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-    const playTrackBtn =
-      document.getElementById("playTrackBtn");
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const audio =
-      document.getElementById("mainAudioPlayer");
 
-    const listenBtn =
-      document.getElementById("listenBtn");
+const firebaseConfig = {
+  apiKey: "AIzaSyAC5ulcLBtrRbmQ4deK1HTOQ5LPSbR7-78",
+  authDomain: "laizer-e5803.firebaseapp.com",
+  projectId: "laizer-e5803",
+  storageBucket: "laizer-e5803.firebasestorage.app",
+  messagingSenderId: "719956823015",
+  appId: "1:719956823015:web:cd83b1536824c8127a0b42",
+  measurementId: "G-6L04YDQTRR"
+};
 
-    const platformLinks =
-      document.getElementById("platformLinks");
 
-    const defaultMessages = [
+const app = initializeApp(firebaseConfig);
 
-      {
-        name: "user_01",
-        text: "I saw myself inside a purple screen."
-      },
+const db = getFirestore(app);
 
-      {
-        name: "user_02",
-        text: "My dream sounded like an old ringtone."
-      },
 
-      {
-        name: "user_03",
-        text: "I was sending messages to someone I forgot."
-      },
+const smsChat =
+  document.getElementById("smsChat");
 
-      {
-        name: "user_04",
-        text: "The archive remembers what I deleted."
-      }
+const playTrackBtn =
+  document.getElementById("playTrackBtn");
 
-    ];
+const audio =
+  document.getElementById("mainAudioPlayer");
 
-    let messages =
-      JSON.parse(localStorage.getItem("laizerMessages"))
-      || defaultMessages;
+const listenBtn =
+  document.getElementById("listenBtn");
 
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
+const platformLinks =
+  document.getElementById("platformLinks");
 
-    function showRandomMessages() {
 
-      smsChat.innerHTML = "";
+const messagesQuery = query(
+  collection(db, "laizerMessages"),
+  orderBy("createdAt", "desc"),
+  limit(30)
+);
 
-      const randomMessages =
-        shuffle([...messages]).slice(0, 8);
 
-      randomMessages.forEach((item, index) => {
+onSnapshot(messagesQuery, (snapshot) => {
 
-        setTimeout(() => {
+  smsChat.innerHTML = "";
 
-          const message =
-            document.createElement("div");
+  const messages = [];
 
-          message.className =
-            index % 2 === 0
-              ? "sms-message received"
-              : "sms-message sent";
+  snapshot.forEach((doc) => {
 
-          message.innerHTML = `
-            <span class="user-name">
-              ${item.name}
-            </span>
+    messages.push(doc.data());
 
-            ${item.text}
-          `;
+  });
 
-          smsChat.appendChild(message);
+  messages.sort(() => Math.random() - 0.5);
 
-        }, index * 700);
+  messages.forEach((item, index) => {
 
-      });
+    setTimeout(() => {
 
-    }
+      const message =
+        document.createElement("div");
 
-    playTrackBtn.addEventListener("click", () => {
+      message.className =
+        index % 2 === 0
+          ? "sms-message received"
+          : "sms-message sent";
 
-      if (audio.paused) {
+      message.innerHTML = `
+        <span class="user-name">
+          ${item.name || "visitor"}
+        </span>
 
-        audio.play();
+        ${item.text || ""}
+      `;
 
-        playTrackBtn.textContent =
-          "⏸ Pause track";
+      smsChat.appendChild(message);
 
-      }
+      smsChat.scrollTop =
+        smsChat.scrollHeight;
 
-      else {
+    }, index * 500);
 
-        audio.pause();
+  });
 
-        playTrackBtn.textContent =
-          "▶ Listen track";
+});
 
-      }
 
-    });
+playTrackBtn.addEventListener("click", () => {
 
-    listenBtn.addEventListener("click", () => {
+  if (audio.paused) {
 
-      platformLinks.classList.toggle("active");
+    audio.play();
 
-    });
+    playTrackBtn.textContent =
+      "⏸ Pause track";
 
-    showRandomMessages();
+  }
 
-  </script>
+  else {
+
+    audio.pause();
+
+    playTrackBtn.textContent =
+      "▶ Listen track";
+
+  }
+
+});
+
+
+listenBtn.addEventListener("click", () => {
+
+  platformLinks.classList.toggle("active");
+
+});
+
+</script>
 
 </body>
 
