@@ -1,70 +1,371 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laizer - Dreams Archive</title>
-    <link rel="stylesheet" href="https://unpkg.com/98.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laizer - Dreams Archive</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body.archive-body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-family: "Courier New", monospace;
+    }
+
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background-image: url("screen-newnew.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      z-index: -2;
+    }
+
+    .bottom-image {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .phone-window {
+      width: 340px;
+      height: 660px;
+
+      background: #cfcfcf;
+
+      border: 6px solid #1e1e1e;
+      border-radius: 38px;
+
+      padding: 22px 16px;
+
+      box-shadow: 12px 12px 0 #000;
+
+      z-index: 10;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+
+      background: #b6a0d8;
+
+      border: 4px solid #000;
+
+      padding: 16px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .track-block {
+      border: 4px solid #3d3d3d;
+      background: #e4d9f5;
+
+      padding: 10px;
+      margin-bottom: 12px;
+
+      text-align: center;
+    }
+
+    .track-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .track-btn {
+      width: 100%;
+
+      padding: 7px;
+
+      border: 4px outset #cfcfcf;
+      background: #d8c6f0;
+
+      font-family: inherit;
+      font-size: 14px;
+
+      cursor: pointer;
+    }
+
+    .track-btn:active {
+      border: 4px inset #cfcfcf;
+    }
+
+    .sms-header {
+      text-align: center;
+
+      font-size: 20px;
+      font-weight: bold;
+
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+
+      border-bottom: 4px solid #4a4a4a;
+
+      color: #1c1c1c;
+    }
+
+    .sms-chat {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      overflow-y: auto;
+
+      padding-right: 4px;
+    }
+
+    .sms-message {
+      max-width: 82%;
+
+      padding: 10px 12px;
+
+      font-size: 14px;
+      line-height: 1.4;
+
+      border: 4px solid #3d3d3d;
+
+      background: #e4d9f5;
+
+      word-break: break-word;
+    }
+
+    .sms-message.received {
+      align-self: flex-start;
+    }
+
+    .sms-message.sent {
+      align-self: flex-end;
+
+      background: #f2eaff;
+    }
+
+    .user-name {
+      display: block;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .bottom-controls {
+      margin-top: 14px;
+    }
+
+    .listen-btn {
+      width: 100%;
+
+      padding: 8px;
+
+      border: 4px outset #cfcfcf;
+      background: #d8c6f0;
+
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .listen-btn:active {
+      border: 4px inset #cfcfcf;
+    }
+
+    .platform-links {
+      display: none;
+
+      flex-direction: column;
+      gap: 6px;
+
+      margin-top: 8px;
+    }
+
+    .platform-links.active {
+      display: flex;
+    }
+
+    .platform-links a {
+      display: block;
+
+      padding: 7px;
+
+      text-align: center;
+      text-decoration: none;
+
+      color: #1c1c1c;
+      background: #f2eaff;
+
+      border: 4px outset #cfcfcf;
+
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .platform-links a:active {
+      border: 4px inset #cfcfcf;
+    }
+  </style>
 </head>
+
 <body class="archive-body">
-    <div class="background-container"></div>
-    <img src="bottom@2x.png" class="bottom-image">
-    <div class="archive-container" id="dreamsArchiveContainer">
-        <!-- Dreams will be dynamically inserted here -->
-    </div>
 
-    <!-- Audio Player Window -->
-    <div class="window" id="audioPlayerContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);z-index: 1000;width: 450px;">
-        <div class="title-bar">
-            <div class="title-bar-text">Music Player</div>
-            <div class="title-bar-controls">
-                <button aria-label="Minimize"></button>
-                <button aria-label="Maximize"></button>
-                <button aria-label="Close"></button>
-            </div>
+  <div class="background-container"></div>
+
+  <img src="bottom@2x.png" class="bottom-image">
+
+  <div class="phone-window">
+
+    <div class="phone-screen">
+
+      <!-- Track player on top -->
+      <div class="track-block">
+        <div class="track-title">
+          LAIZER — Dream Track
         </div>
-        <div class="window-body">
-            <!-- Audio Screen Display -->
-            <div class="audio-screen" id="audioDisplay">Playing...</div>
-            
-            <!-- Audio Element (hidden) -->
-            <audio id="mainAudioPlayer" style="display: none;">
-                <source src="audio.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
 
-            <!-- Controls -->
-            <div class="audio-controls">
-                <div class="audio-buttons">
-                    <button class="retro-btn" id="btnPlay">▶</button>
-                    <button class="retro-btn" id="btnPause">⏸</button>
-                    <button class="retro-btn" id="btnStop">⏹</button>
-                </div>
-                <input type="range" id="range2" min="0" max="100" value="0" style="width: 100%; margin-top: 10px; cursor: pointer;">
-            </div>
+        <button class="track-btn" id="playTrackBtn">
+          ▶ Listen track
+        </button>
+
+        <audio id="mainAudioPlayer">
+          <source src="audio.mp3" type="audio/mpeg">
+        </audio>
+      </div>
+
+      <div class="sms-header">
+        Archive Messages
+      </div>
+
+      <div class="sms-chat" id="smsChat">
+        <!-- random messages will appear here -->
+      </div>
+
+      <div class="bottom-controls">
+
+        <button class="listen-btn" id="listenBtn">
+          LISTEN
+        </button>
+
+        <div class="platform-links" id="platformLinks">
+          <a href="https://spotify.com" target="_blank">Spotify</a>
+          <a href="https://music.apple.com" target="_blank">Apple Music</a>
+          <a href="https://youtube.com" target="_blank">YouTube</a>
+          <a href="https://soundcloud.com" target="_blank">SoundCloud</a>
+          <a href="https://bandcamp.com" target="_blank">Bandcamp</a>
+          <a href="https://tidal.com" target="_blank">Tidal</a>
+          <a href="https://music.amazon.com" target="_blank">Amazon Music</a>
         </div>
+
+      </div>
+
     </div>
 
-    <!-- Social Media Links -->
-    <div class="audio-links" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999;">
-        <a href="https://instagram.com" target="_blank" class="retro-link-btn">Instagram</a>
-        <a href="https://twitter.com" target="_blank" class="retro-link-btn">Twitter</a>
-        <a href="https://tiktok.com" target="_blank" class="retro-link-btn">TikTok</a>
-        <a href="https://youtube.com" target="_blank" class="retro-link-btn">YouTube</a>
-    </div>
+  </div>
 
-    <!-- Streaming Platform Links -->
-    <div class="platform-links">
-        <a href="https://spotify.com" target="_blank" class="spotify">Spotify</a>
-        <a href="https://music.apple.com" target="_blank" class="apple">Apple Music</a>
-        <a href="https://youtube.com" target="_blank" class="youtube">YouTube</a>
-        <a href="https://soundcloud.com" target="_blank" class="soundcloud">SoundCloud</a>
-        <a href="https://bandcamp.com" target="_blank" class="bandcamp">Bandcamp</a>
-        <a href="https://tidal.com" target="_blank" class="tidal">Tidal</a>
-        <a href="https://music.amazon.com" target="_blank" class="amazon">Amazon Music</a>
-    </div>
+  <script>
+    const smsChat = document.getElementById("smsChat");
+    const playTrackBtn = document.getElementById("playTrackBtn");
+    const audio = document.getElementById("mainAudioPlayer");
+    const listenBtn = document.getElementById("listenBtn");
+    const platformLinks = document.getElementById("platformLinks");
 
-    <script type="module" src="script.js"></script>
+    const defaultMessages = [
+      {
+        name: "user_01",
+        text: "I saw myself inside a purple screen."
+      },
+      {
+        name: "user_02",
+        text: "My dream sounded like an old ringtone."
+      },
+      {
+        name: "user_03",
+        text: "I was sending messages to someone I forgot."
+      },
+      {
+        name: "user_04",
+        text: "The archive remembers what I deleted."
+      },
+      {
+        name: "user_05",
+        text: "I want to leave a dream here."
+      }
+    ];
+
+    let messages =
+      JSON.parse(localStorage.getItem("laizerMessages")) || defaultMessages;
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function showRandomMessages() {
+      smsChat.innerHTML = "";
+
+      const randomMessages = shuffle([...messages]).slice(0, 8);
+
+      randomMessages.forEach((item, index) => {
+        setTimeout(() => {
+          const message = document.createElement("div");
+
+          message.className =
+            index % 2 === 0
+              ? "sms-message received"
+              : "sms-message sent";
+
+          message.innerHTML = `
+            <span class="user-name">${item.name}</span>
+            ${item.text}
+          `;
+
+          smsChat.appendChild(message);
+          smsChat.scrollTop = smsChat.scrollHeight;
+        }, index * 700);
+      });
+    }
+
+    playTrackBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+        playTrackBtn.textContent = "⏸ Pause track";
+      } else {
+        audio.pause();
+        playTrackBtn.textContent = "▶ Listen track";
+      }
+    });
+
+    listenBtn.addEventListener("click", () => {
+      platformLinks.classList.toggle("active");
+    });
+
+    showRandomMessages();
+  </script>
+
 </body>
 </html>
+```
