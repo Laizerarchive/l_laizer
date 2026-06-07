@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laizer Messages</title>
 
   <style>
@@ -16,20 +16,30 @@
     body {
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
 
       display: flex;
       justify-content: center;
       align-items: center;
 
-      overflow: hidden;
-
-      background:
-        radial-gradient(circle at top, #8c5cff 0%, #4f2d7f 45%, #1a1028 100%);
-
       font-family: "Courier New", monospace;
     }
 
-    /* phone */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background-image: url("screen newnew.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      z-index: -1;
+    }
 
     .phone-window {
       width: 320px;
@@ -42,15 +52,14 @@
 
       padding: 22px 16px;
 
-      box-shadow:
-        12px 12px 0px #000000;
+      box-shadow: 12px 12px 0 #000;
     }
 
     .phone-screen {
       width: 100%;
       height: 100%;
 
-      background: #b6c2a0;
+      background: #b6a0d8;
 
       border: 4px solid #000;
 
@@ -59,8 +68,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* header */
 
     .sms-header {
       text-align: center;
@@ -75,8 +82,6 @@
 
       color: #1c1c1c;
     }
-
-    /* chat */
 
     .sms-chat {
       flex: 1;
@@ -98,7 +103,7 @@
 
       border: 4px solid #3d3d3d;
 
-      background: #d7ddc0;
+      background: #e4d9f5;
 
       word-break: break-word;
     }
@@ -110,16 +115,12 @@
     .sms-message.sent {
       align-self: flex-end;
 
-      background: #efefdf;
+      background: #f2eaff;
     }
-
-    /* input */
 
     .sms-input-row {
       display: flex;
-
       gap: 8px;
-
       margin-top: 18px;
     }
 
@@ -132,13 +133,12 @@
 
       border: 4px inset #777;
 
-      background: #f2f2e7;
+      background: #f5efff;
 
       font-size: 14px;
+      font-family: inherit;
 
       outline: none;
-
-      font-family: inherit;
     }
 
     .sms-input-row button {
@@ -146,23 +146,23 @@
 
       border: 4px outset #cfcfcf;
 
-      background: #dcdcdc;
+      background: #d8c6f0;
 
       font-size: 14px;
+      font-family: inherit;
 
       cursor: pointer;
-
-      font-family: inherit;
     }
 
     .sms-input-row button:active {
       border: 4px inset #cfcfcf;
     }
-
   </style>
 </head>
 
 <body>
+
+  <div class="background-container"></div>
 
   <div class="phone-window">
 
@@ -190,7 +190,7 @@
           type="text"
           id="smsInput"
           placeholder="Type message..."
-        >
+        />
 
         <button id="smsSend">
           Send
@@ -216,21 +216,16 @@
     });
 
     function sendMessage() {
-
       const text = smsInput.value.trim();
 
       if (!text) return;
 
       const message = document.createElement("div");
-
       message.className = "sms-message sent";
-
       message.textContent = text;
 
       smsChat.appendChild(message);
-
       smsInput.value = "";
-
       smsChat.scrollTop = smsChat.scrollHeight;
     }
   </script>
