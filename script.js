@@ -23,13 +23,75 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function formatTime(seconds) {
+    if (!seconds || isNaN(seconds)) return '00:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function escapeHTML(str) {
+    return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+    }[tag]));
+}
+
+function makeDraggable(element) {
+    const titleBar = element.querySelector('.title-bar');
+    if (!titleBar) return;
+
+    let isDragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    titleBar.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        const rect = element.getBoundingClientRect();
+        element.style.transform = 'none';
+        element.style.left = `${rect.left}px`;
+        element.style.top = `${rect.top}px`;
+
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        const allWindows = document.querySelectorAll('.window');
+        let maxZ = 0;
+
+        allWindows.forEach(w => {
+            const z = parseInt(w.style.zIndex || 0);
+            if (z > maxZ) maxZ = z;
+        });
+
+        element.style.zIndex = maxZ + 1;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            element.style.left = `${e.clientX - offsetX}px`;
+            element.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing...');
+
     // ========== INDEX PAGE (Input Page) ==========
     const sendBtn = document.getElementById('sendBtn');
     const dreamInput = document.getElementById('dreamInput');
     const inputWindow = document.getElementById('inputWindow');
 
-    if (sendBtn && dreamInput) {
+    if (sendBtn && dreamInput && inputWindow) {
+        console.log('Index page detected');
         dreamInput.focus();
 
         sendBtn.addEventListener('click', async () => {
@@ -62,98 +124,94 @@ document.addEventListener('DOMContentLoaded', () => {
                             createdAt: serverTimestamp()
                         });
 
+                        console.log('Message sent successfully');
                         dreamInput.value = '';
-                        dreamInput.focus();
 
-                        window.location.href = "archive.html";
+                        setTimeout(() => {
+                            window.location.href = "archive.html";
+                        }, 1000);
                     } catch (error) {
                         console.error("Error adding dream:", error);
                         alert("Message was not sent. Please try again.");
-                    }
-
-                    setTimeout(() => {
                         loadingContainer.style.display = 'none';
                         sendBtnContainer.style.display = 'flex';
-                    }, 500);
+                    }
                 }
 
                 loadingBar.style.width = `${progress}%`;
             }, 100);
         });
 
-        if (inputWindow) {
-            makeDraggable(inputWindow);
-        }
+        makeDraggable(inputWindow);
     }
 
     // ========== ARCHIVE PAGE (Dreams Display) ==========
     const archiveContainer = document.getElementById('dreamsArchiveContainer');
 
-    function loadAndDisplayDreams() {
-        if (!archiveContainer) return;
+    if (archiveContainer) {
+        console.log('Archive page detected');
+
+        function createDreamWindow(dream, index) {
+            const dreamEl = document.createElement('div');
+            dreamEl.className = 'window dream-window';
+
+            const padding = 20;
+            const maxLeft = window.innerWidth - 320;
+            const maxTop = window.innerHeight - 200;
+
+            const randomLeft = padding + Math.random() * (maxLeft > 0 ? maxLeft : 10);
+            const randomTop = padding + Math.random() * (maxTop > 0 ? maxTop : 10);
+
+            dreamEl.style.left = `${randomLeft}px`;
+            dreamEl.style.top = `${randomTop}px`;
+            dreamEl.style.zIndex = index + 10;
+
+            const randomHue = Math.floor(Math.random() * 360);
+            const randomColor = `hsl(${randomHue}, 70%, 40%)`;
+
+            const dreamDate = new Date(dream.date);
+            const formattedDate = dreamDate.toLocaleString();
+
+            dreamEl.innerHTML = `
+                <div class="title-bar" style="background: ${randomColor};">
+                    <div class="title-bar-text">dream.txt</div>
+                    <div class="title-bar-controls">
+                        <button aria-label="Close" class="close-btn"></button>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <p class="dream-text-content">${escapeHTML(dream.text)}</p>
+                    <div class="timestamp">${formattedDate}</div>
+                </div>
+            `;
+
+            const closeBtn = dreamEl.querySelector('.close-btn');
+            closeBtn.addEventListener('click', () => {
+                dreamEl.style.display = 'none';
+            });
+
+            makeDraggable(dreamEl);
+            archiveContainer.appendChild(dreamEl);
+        }
 
         const q = query(collection(db, "dreams"), orderBy("createdAt", "desc"));
 
         onSnapshot(q, (snapshot) => {
             archiveContainer.innerHTML = '';
+            console.log('Dreams loaded:', snapshot.docs.length);
 
             snapshot.forEach((docItem, index) => {
                 const data = docItem.data();
-
                 const dream = {
                     text: data.text || '',
                     date: data.createdAt?.toDate?.() || new Date()
                 };
-
                 createDreamWindow(dream, index);
             });
+        }, (error) => {
+            console.error("Error loading dreams:", error);
         });
     }
-
-    function createDreamWindow(dream, index) {
-        const dreamEl = document.createElement('div');
-        dreamEl.className = 'window dream-window';
-
-        const padding = 20;
-        const maxLeft = window.innerWidth - 320;
-        const maxTop = window.innerHeight - 200;
-
-        const randomLeft = padding + Math.random() * (maxLeft > 0 ? maxLeft : 10);
-        const randomTop = padding + Math.random() * (maxTop > 0 ? maxTop : 10);
-
-        dreamEl.style.left = `${randomLeft}px`;
-        dreamEl.style.top = `${randomTop}px`;
-        dreamEl.style.zIndex = index + 10;
-
-        const randomHue = Math.floor(Math.random() * 360);
-        const randomColor = `hsl(${randomHue}, 70%, 40%)`;
-
-        const dreamDate = new Date(dream.date);
-        const formattedDate = dreamDate.toLocaleString();
-
-        dreamEl.innerHTML = `
-            <div class="title-bar" style="background: ${randomColor};">
-                <div class="title-bar-text">dream.txt</div>
-                <div class="title-bar-controls">
-                    <button aria-label="Close" class="close-btn"></button>
-                </div>
-            </div>
-            <div class="window-body">
-                <p class="dream-text-content">${escapeHTML(dream.text)}</p>
-                <div class="timestamp">${formattedDate}</div>
-            </div>
-        `;
-
-        const closeBtn = dreamEl.querySelector('.close-btn');
-        closeBtn.addEventListener('click', () => {
-            dreamEl.style.display = 'none';
-        });
-
-        makeDraggable(dreamEl);
-        archiveContainer.appendChild(dreamEl);
-    }
-
-    loadAndDisplayDreams();
 
     // ========== AUDIO PLAYER (Archive Page) ==========
     const audioPlayerContainer = document.getElementById('audioPlayerContainer');
@@ -167,19 +225,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const platformLinks = document.getElementById('platformLinks');
 
     if (audioPlayerContainer) {
+        console.log('Audio player found');
         makeDraggable(audioPlayerContainer);
     }
 
-    // Format time for display
-    function formatTime(seconds) {
-        if (!seconds || isNaN(seconds)) return '00:00';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
     if (audioPlayer && btnPlay && btnPause && btnStop && progressBar) {
-        // Update display when metadata loads
+        console.log('Setting up audio controls');
+
         audioPlayer.addEventListener('loadedmetadata', () => {
             if (audioDisplay) {
                 audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
@@ -218,69 +270,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Listen button - toggle platform links
     if (listenBtn && platformLinks) {
+        console.log('Setting up listen button');
         listenBtn.addEventListener('click', () => {
-            if (platformLinks.style.display === 'none' || platformLinks.style.display === '') {
-                platformLinks.style.display = 'flex';
-                listenBtn.classList.add('active');
-            } else {
-                platformLinks.style.display = 'none';
-                listenBtn.classList.remove('active');
-            }
+            const isHidden = platformLinks.style.display === 'none' || platformLinks.style.display === '';
+            platformLinks.style.display = isHidden ? 'flex' : 'none';
+            listenBtn.classList.toggle('active');
         });
-    }
-
-    // ========== UTILITY FUNCTIONS ==========
-    function makeDraggable(element) {
-        const titleBar = element.querySelector('.title-bar');
-        if (!titleBar) return;
-
-        let isDragging = false;
-        let offsetX = 0;
-        let offsetY = 0;
-
-        titleBar.addEventListener('mousedown', (e) => {
-            isDragging = true;
-
-            const rect = element.getBoundingClientRect();
-            element.style.transform = 'none';
-            element.style.left = `${rect.left}px`;
-            element.style.top = `${rect.top}px`;
-
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-
-            const allWindows = document.querySelectorAll('.window');
-            let maxZ = 0;
-
-            allWindows.forEach(w => {
-                const z = parseInt(w.style.zIndex || 0);
-                if (z > maxZ) maxZ = z;
-            });
-
-            element.style.zIndex = maxZ + 1;
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                element.style.left = `${e.clientX - offsetX}px`;
-                element.style.top = `${e.clientY - offsetY}px`;
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-    }
-
-    function escapeHTML(str) {
-        return String(str).replace(/[&<>'"]/g, tag => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            "'": '&#39;',
-            '"': '&quot;'
-        }[tag]));
     }
 });
