@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = dreamInput.value.trim();
 
             if (!text) {
-                alert("Please enter your name and your dream.");
+                alert("Please enter your dream.");
                 return;
             }
 
@@ -130,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
     createdAt: serverTimestamp()
 });
 
-                        dreamUsername.value = '';
                         dreamInput.value = '';
                         dreamInput.focus();
 
@@ -167,8 +166,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnPause = document.getElementById('btnPause');
     const btnStop = document.getElementById('btnStop');
     const progressBar = document.getElementById('range2');
+    const audioDisplay = document.getElementById('audioDisplay');
+    const listenBtn = document.getElementById('listenBtn');
+    const platformLinks = document.getElementById('platformLinks');
+
+    // Format time for display
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '00:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
 
     if (audioPlayer && btnPlay && btnPause && btnStop && progressBar) {
+        // Update display when metadata loads
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
+        });
+
         btnPlay.addEventListener('click', () => {
             audioPlayer.play();
         });
@@ -180,11 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
         btnStop.addEventListener('click', () => {
             audioPlayer.pause();
             audioPlayer.currentTime = 0;
+            audioDisplay.textContent = `00:00 / ${formatTime(audioPlayer.duration)}`;
         });
 
         audioPlayer.addEventListener('timeupdate', () => {
             if (audioPlayer.duration) {
                 progressBar.value = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                audioDisplay.textContent = `${formatTime(audioPlayer.currentTime)} / ${formatTime(audioPlayer.duration)}`;
             }
         });
 
@@ -192,6 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (audioPlayer.duration) {
                 audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
             }
+        });
+    }
+
+    // Listen button - toggle platform links
+    if (listenBtn && platformLinks) {
+        listenBtn.addEventListener('click', () => {
+            platformLinks.style.display = platformLinks.style.display === 'none' ? 'flex' : 'none';
+            listenBtn.classList.toggle('active');
         });
     }
 
