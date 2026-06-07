@@ -2,306 +2,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laizer - Dreams Archive</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laizer Messages</title>
 
-    <link rel="stylesheet" href="https://unpkg.com/98.css">
-    <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <style>
-        .phone-window {
-            position: fixed;
-            right: 30px;
-            bottom: 100px;
-            width: 260px;
-            height: 430px;
-            background: #cfcfcf;
-            border: 4px solid #222;
-            border-radius: 28px;
-            padding: 18px 12px;
-            z-index: 1200;
-            box-shadow: 6px 6px 0 #000;
-        }
+    body {
+      width: 100vw;
+      height: 100vh;
 
-        .phone-screen {
-            height: 100%;
-            background: #9fb38f;
-            border: 3px inset #333;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            font-family: "Courier New", monospace;
-        }
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-        .sms-header {
-            text-align: center;
-            font-weight: bold;
-            font-size: 14px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 6px;
-            margin-bottom: 8px;
-        }
+      overflow: hidden;
 
-        .sms-chat {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+      background:
+        radial-gradient(circle at top, #8c5cff 0%, #4f2d7f 45%, #1a1028 100%);
 
-        .sms-message {
-            max-width: 80%;
-            padding: 6px 8px;
-            font-size: 12px;
-            border: 2px solid #333;
-            background: #dce6c8;
-            word-break: break-word;
-        }
+      font-family: "Courier New", monospace;
+    }
 
-        .sms-message.received {
-            align-self: flex-start;
-        }
+    /* phone */
 
-        .sms-message.sent {
-            align-self: flex-end;
-            background: #f0f0d8;
-        }
+    .phone-window {
+      width: 320px;
+      height: 620px;
 
-        .sms-input-row {
-            display: flex;
-            gap: 4px;
-            margin-top: 8px;
-        }
+      background: #cfcfcf;
 
-        .sms-input-row input {
-            flex: 1;
-            font-size: 12px;
-            padding: 4px;
-            background: #e4e8d0;
-            border: 2px inset #333;
-        }
+      border: 6px solid #1e1e1e;
+      border-radius: 38px;
 
-        .sms-input-row button {
-            font-size: 11px;
-            border: 2px outset #333;
-            background: #ddd;
-            cursor: pointer;
-        }
-    </style>
+      padding: 22px 16px;
+
+      box-shadow:
+        12px 12px 0px #000000;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+
+      background: #b6c2a0;
+
+      border: 4px solid #000;
+
+      padding: 18px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* header */
+
+    .sms-header {
+      text-align: center;
+
+      font-size: 20px;
+      font-weight: bold;
+
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+
+      border-bottom: 4px solid #4a4a4a;
+
+      color: #1c1c1c;
+    }
+
+    /* chat */
+
+    .sms-chat {
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      overflow-y: auto;
+    }
+
+    .sms-message {
+      max-width: 82%;
+
+      padding: 12px 14px;
+
+      font-size: 16px;
+      line-height: 1.4;
+
+      border: 4px solid #3d3d3d;
+
+      background: #d7ddc0;
+
+      word-break: break-word;
+    }
+
+    .sms-message.received {
+      align-self: flex-start;
+    }
+
+    .sms-message.sent {
+      align-self: flex-end;
+
+      background: #efefdf;
+    }
+
+    /* input */
+
+    .sms-input-row {
+      display: flex;
+
+      gap: 8px;
+
+      margin-top: 18px;
+    }
+
+    .sms-input-row input {
+      flex: 1;
+
+      height: 38px;
+
+      padding: 6px 10px;
+
+      border: 4px inset #777;
+
+      background: #f2f2e7;
+
+      font-size: 14px;
+
+      outline: none;
+
+      font-family: inherit;
+    }
+
+    .sms-input-row button {
+      width: 92px;
+
+      border: 4px outset #cfcfcf;
+
+      background: #dcdcdc;
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+      font-family: inherit;
+    }
+
+    .sms-input-row button:active {
+      border: 4px inset #cfcfcf;
+    }
+
+  </style>
 </head>
 
-<body class="archive-body">
+<body>
 
-    <div class="background-container"></div>
+  <div class="phone-window">
 
-    <img src="bottom@2x.png" class="bottom-image">
+    <div class="phone-screen">
 
-    <div class="archive-container" id="dreamsArchiveContainer">
-        <!-- Dreams will be dynamically inserted here -->
-    </div>
+      <div class="sms-header">
+        Messages
+      </div>
 
-    <!-- Audio Player Window -->
-    <div class="window" id="audioPlayerContainer"
-        style="position: fixed; top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1000;
-        width: 450px;">
+      <div class="sms-chat" id="smsChat">
 
-        <div class="title-bar">
-            <div class="title-bar-text">Music Player</div>
-
-            <div class="title-bar-controls">
-                <button aria-label="Minimize"></button>
-                <button aria-label="Maximize"></button>
-                <button aria-label="Close"></button>
-            </div>
+        <div class="sms-message received">
+          Welcome to Laizer archive...
         </div>
 
-        <div class="window-body">
-
-            <!-- Audio Screen Display -->
-            <div class="audio-screen" id="audioDisplay">
-                Playing...
-            </div>
-
-            <!-- Audio Element -->
-            <audio id="mainAudioPlayer" style="display: none;">
-                <source src="audio.mp3" type="audio/mpeg">
-            </audio>
-
-            <!-- Controls -->
-            <div class="audio-controls">
-
-                <div class="audio-buttons">
-                    <button class="retro-btn" id="btnPlay">▶</button>
-                    <button class="retro-btn" id="btnPause">⏸</button>
-                    <button class="retro-btn" id="btnStop">⏹</button>
-                </div>
-
-                <input
-                    type="range"
-                    id="range2"
-                    min="0"
-                    max="100"
-                    value="0"
-                    style="width: 100%; margin-top: 10px; cursor: pointer;"
-                >
-            </div>
+        <div class="sms-message sent">
+          I want to leave a dream.
         </div>
-    </div>
 
-    <!-- OLD PHONE SMS WINDOW -->
-    <div class="phone-window">
+      </div>
 
-        <div class="phone-screen">
+      <div class="sms-input-row">
 
-            <div class="sms-header">
-                Messages
-            </div>
+        <input
+          type="text"
+          id="smsInput"
+          placeholder="Type message..."
+        >
 
-            <div class="sms-chat" id="smsChat">
+        <button id="smsSend">
+          Send
+        </button>
 
-                <div class="sms-message received">
-                    Welcome to Laizer archive...
-                </div>
-
-                <div class="sms-message sent">
-                    I want to leave a dream.
-                </div>
-
-            </div>
-
-            <div class="sms-input-row">
-                <input
-                    type="text"
-                    id="smsInput"
-                    placeholder="Type message..."
-                >
-
-                <button id="smsSend">
-                    Send
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Social Media Links -->
-    <div class="audio-links"
-        style="position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 999;">
-
-        <a href="https://instagram.com"
-            target="_blank"
-            class="retro-link-btn">
-            Instagram
-        </a>
-
-        <a href="https://twitter.com"
-            target="_blank"
-            class="retro-link-btn">
-            Twitter
-        </a>
-
-        <a href="https://tiktok.com"
-            target="_blank"
-            class="retro-link-btn">
-            TikTok
-        </a>
-
-        <a href="https://youtube.com"
-            target="_blank"
-            class="retro-link-btn">
-            YouTube
-        </a>
-    </div>
-
-    <!-- Streaming Platform Links -->
-    <div class="platform-links">
-
-        <a href="https://spotify.com"
-            target="_blank"
-            class="spotify">
-            Spotify
-        </a>
-
-        <a href="https://music.apple.com"
-            target="_blank"
-            class="apple">
-            Apple Music
-        </a>
-
-        <a href="https://youtube.com"
-            target="_blank"
-            class="youtube">
-            YouTube
-        </a>
-
-        <a href="https://soundcloud.com"
-            target="_blank"
-            class="soundcloud">
-            SoundCloud
-        </a>
-
-        <a href="https://bandcamp.com"
-            target="_blank"
-            class="bandcamp">
-            Bandcamp
-        </a>
-
-        <a href="https://tidal.com"
-            target="_blank"
-            class="tidal">
-            Tidal
-        </a>
-
-        <a href="https://music.amazon.com"
-            target="_blank"
-            class="amazon">
-            Amazon Music
-        </a>
+      </div>
 
     </div>
 
-    <script>
-        const smsInput = document.getElementById("smsInput");
-        const smsSend = document.getElementById("smsSend");
-        const smsChat = document.getElementById("smsChat");
+  </div>
 
-        smsSend.addEventListener("click", sendSmsMessage);
+  <script>
+    const smsInput = document.getElementById("smsInput");
+    const smsSend = document.getElementById("smsSend");
+    const smsChat = document.getElementById("smsChat");
 
-        smsInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                sendSmsMessage();
-            }
-        });
+    smsSend.addEventListener("click", sendMessage);
 
-        function sendSmsMessage() {
+    smsInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
 
-            const text = smsInput.value.trim();
+    function sendMessage() {
 
-            if (!text) return;
+      const text = smsInput.value.trim();
 
-            const message = document.createElement("div");
+      if (!text) return;
 
-            message.className = "sms-message sent";
+      const message = document.createElement("div");
 
-            message.textContent = text;
+      message.className = "sms-message sent";
 
-            smsChat.appendChild(message);
+      message.textContent = text;
 
-            smsInput.value = "";
+      smsChat.appendChild(message);
 
-            smsChat.scrollTop = smsChat.scrollHeight;
-        }
-    </script>
+      smsInput.value = "";
 
-    <script type="module" src="script.js"></script>
+      smsChat.scrollTop = smsChat.scrollHeight;
+    }
+  </script>
 
 </body>
 </html>
