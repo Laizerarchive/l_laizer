@@ -34,10 +34,6 @@ body {
     z-index: -999;
 }
 
-.archive-body .background-container {
-    background-image: url('screen\ new-04.png');
-}
-
 .bottom-image {
     position: fixed;
     bottom: 0;
