@@ -1,452 +1,252 @@
 /* Global Reset */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    font-family: Bookmania; /* Font from 98.css */
-    overflow-y: auto;
-overflow-x: hidden;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Background image handling */
 html,
 body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    min-height: 100vh;
-    overflow: hidden;
+  width: 100vw;
+  min-height: 100vh;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  font-family: Bookmania, monospace;
 }
 
+/* Background */
 .background-container {
-    position: fixed;
-    inset: 0;
+  position: fixed;
+  inset: 0;
 
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 
-    background-image: url('./screen6.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  background-image: url("./screen6.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-    z-index: -999;
+  z-index: -999;
 }
 
-
-
-/* Base styling */
+/* Main wrapper */
 .content-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 18px;
+
+  min-height: 100vh;
+  padding: 20px;
+
+  box-sizing: border-box;
 }
 
-/* Logo */
-.logo-container {
-    margin-bottom: 20px;
-    text-align: center;
+/* Phone */
+.phone-window {
+  width: 320px;
+  height: 520px;
+
+  background: #cfcfcf;
+
+  border: 4px solid #323232;
+  border-radius: 38px;
+
+  padding: 16px;
+
+  box-shadow: 6px 6px 0 #323232;
+
+  z-index: 10;
 }
 
-.logo {
-    max-width: 300px;
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.5));
+.phone-screen {
+  width: 100%;
+  height: 100%;
+
+  background: #b6a0d8;
+
+  border: 4px solid #323232;
+  border-radius: 28px;
+
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
 }
 
-/* Main Window */
-.main-window {
-    width: 450px;
-    max-width: 100%;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.7);
+/* Track block */
+.track-block {
+  border: 4px solid #3d3d3d;
+
+  background: #e4d9f5;
+
+  padding: 10px;
+
+  margin-bottom: 12px;
+
+  text-align: center;
 }
 
-.main-window .window-body {
-    padding: 20px;
+.track-title {
+  font-size: 14px;
+  font-weight: bold;
+
+  margin-bottom: 8px;
 }
 
-.main-window p {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 16px;
+.track-btn {
+  width: 100%;
+
+  padding: 8px;
+
+  border: 4px outset #cfcfcf;
+
+  background: #d8c6f0;
+
+  font-family: inherit;
+
+  cursor: pointer;
 }
 
-/* Input field styling */
-.dream-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 4px;
-    border: inset 2px #dfdfdf;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    background: #fff;
-    margin-bottom: 10px;
+.track-btn:active {
+  border: 4px inset #cfcfcf;
 }
 
-/* Text area styling */
-.dream-textarea {
-    width: 100%;
-    box-sizing: border-box;
-    resize: none;
-    font-family: 'Pixelated MS Sans Serif', Arial;
-    font-size: 14px;
-    padding: 4px;
-    border: inset 2px #dfdfdf;
+/* Header */
+.sms-header {
+  text-align: center;
+
+  font-size: 20px;
+  font-weight: bold;
+
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+
+  border-bottom: 4px solid #4a4a4a;
 }
 
-.button-container {
-    margin-top: 15px;
-    display: flex;
-    justify-content: flex-end;
+/* Chat */
+.sms-chat {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  overflow-y: auto;
 }
 
-.button-container button {
-    padding: 6px 20px;
-    font-weight: bold;
-    cursor: pointer;
+.sms-message {
+  max-width: 82%;
+
+  padding: 10px 12px;
+
+  font-size: 14px;
+
+  border: 4px solid #3d3d3d;
+
+  background: #e4d9f5;
+
+  line-height: 1.4;
+
+  word-break: break-word;
 }
 
-/* Loading Simulation */
-.progress-indicator-container {
-    width: 100%;
-    height: 15px;
-    background: silver;
-    box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
-    position: relative;
-    padding: 2px;
-    box-sizing: border-box;
+.sms-message.received {
+  align-self: flex-start;
 }
 
-.progress-bar-fill {
-    height: 100%;
-    background-color: #000080; /* Windows Blue */
-    width: 0%;
-    transition: width 0.1s linear;
+.sms-message.sent {
+  align-self: flex-end;
+
+  background: #f2eaff;
 }
 
-/* Archive Page */
-.archive-body {
-    overflow: hidden; /* Hide main scrollbar to act like a desktop */
+.user-name {
+  display: block;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  margin-bottom: 4px;
+
+  opacity: 0.7;
 }
 
-.archive-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
+/* Listen */
+.bottom-controls {
+  margin-top: 14px;
 }
 
-.dream-window {
-    position: absolute;
-    width: 300px;
-    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.6);
-}
-
-.dream-window .window-body {
-    min-height: 80px;
-    word-break: break-word;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: #fff;
-    border: inset 2px #dfdfdf;
-    padding: 10px;
-    margin: 0;
-}
-
-.dream-text-content {
-    font-size: 18px;
-    line-height: 1.4;
-    margin: 0;
-    font-family: Arial, sans-serif; /* Make it more legible */
-}
-
-.timestamp {
-    font-size: 10px;
-    color: #666;
-    text-align: right;
-    margin-top: 15px;
-}
-
-/* Desktop Icons */
-.desktop-icons {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-.desktop-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: #fff;
-    width: 60px;
-}
-
-.desktop-icon:hover {
-    filter: brightness(1.2);
-}
-
-.desktop-icon::after {
-    content: attr(alt);
-    margin-top: 5px;
-    font-size: 11px;
-    text-align: center;
-    background: #000080;
-    padding: 2px 4px;
-    border: 1px dotted transparent;
-}
-
-.desktop-icon:focus::after {
-    border: 1px dotted #fff;
-}
-
-/* Center Audio Player */
-.center-audio-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.audio-window {
-    width: 450px;
-    max-width: 90vw;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.7);
-}
-
-.audio-screen {
-    background: #000;
-    color: #0f0; /* Retro green or white, depending on preference. Let's use #0f0 */
-    height: 40px;
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    margin-bottom: 15px;
-    border: inset 2px #dfdfdf;
-    font-family: monospace;
-    font-size: 14px;
-}
-
-.audio-controls {
-    display: flex;
-    flex-direction: column;
-}
-
-.audio-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-}
-
-.audio-buttons-center {
-    display: flex;
-    gap: 2px;
-}
-
-.retro-btn {
-    min-width: 40px;
-    height: 25px;
-    background: silver;
-    border-top: 1px solid #fff;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #0a0a0a;
-    border-bottom: 1px solid #0a0a0a;
-    box-shadow: inset 1px 1px #dfdfdf, inset -1px -1px grey;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.retro-btn:active {
-    box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff;
-    border-top: 1px solid grey;
-    border-left: 1px solid grey;
-    border-right: 1px solid #dfdfdf;
-    border-bottom: 1px solid #dfdfdf;
-}
-
-/* Listen Button */
 .listen-btn {
-    width: 100%;
-    padding: 10px 16px;
-    margin-top: 15px;
-    background: silver;
-    border: 2px solid;
-    border-color: #fff #0a0a0a #0a0a0a #fff;
-    box-shadow: 1px 1px 0 #dfdfdf, inset 1px 1px 0 #fff;
-    font-family: 'Pixelated MS Sans Serif', Arial;
-    font-size: 11px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.1s ease;
+  width: 100%;
+
+  padding: 8px;
+
+  border: 4px outset #cfcfcf;
+
+  background: #d8c6f0;
+
+  font-family: inherit;
+
+  font-size: 15px;
+  font-weight: bold;
+
+  cursor: pointer;
 }
 
 .listen-btn:active {
-    box-shadow: inset 1px 1px 0 #0a0a0a;
-    border-color: #0a0a0a #fff #fff #0a0a0a;
+  border: 4px inset #cfcfcf;
 }
 
-.listen-btn.active {
-    background: #dfdfdf;
-    box-shadow: inset 1px 1px 0 #0a0a0a;
-}
-
-/* Links under player */
+/* Platform links inside phone */
 .platform-links {
-    position: fixed;
-    left: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 9999;
-    transition: all 0.3s ease;
+  display: none;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-top: 8px;
 }
 
-.platform-links.hidden {
-    display: none;
+.platform-links.active {
+  display: flex;
 }
 
 .platform-links a {
-    display: block;
-    text-decoration: none !important;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 9px 14px;
-    border: 2px solid black;
-    box-shadow: 3px 3px 0 black;
-    width: 160px;
-    transition: transform 0.2s ease;
+  display: block;
+
+  padding: 7px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  color: #1c1c1c;
+
+  background: #f2eaff;
+
+  border: 4px outset #cfcfcf;
 }
 
-.platform-links a:hover {
-    transform: translateX(5px);
+.platform-links a:active {
+  border: 4px inset #cfcfcf;
 }
 
-.spotify {
-    background: #1DB954;
-    color: black;
-}
-
-.apple {
-    background: #d9d9d9;
-    color: black;
-}
-
-.youtube {
-    background: #ff0000;
-    color: white;
-}
-
-.soundcloud {
-    background: #ff7700;
-    color: white;
-}
-
-.bandcamp {
-    background: #629aa9;
-    color: white;
-}
-
-.tidal {
-    background: black;
-    color: white;
-}
-
-.amazon {
-    background: #00A8E1;
-    color: black;
-}
-
-/* Bottom Social Buttons */
-
-.audio-links {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-
-    z-index: 9999;
-}
-
-.retro-link-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 8px 16px;
-
-    background: #c0c0c0;
-    border: 2px solid black;
-
-    box-shadow: 3px 3px 0 black;
-
-    text-decoration: none !important;
-
-    color: black !important;
-
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-
-    transition: 0.15s;
-}
-
-.retro-link-btn:hover {
-    transform: translateY(-3px);
-}
-
-/* Labels in main window */
-.main-window label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-/* Field row stacked */
-.field-row-stacked {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
+/* Social buttons under phone */
 .social-buttons {
   display: flex;
+  justify-content: center;
   gap: 10px;
 
-  margin-top: 18px;
-
-  justify-content: center;
+  z-index: 20;
 }
 
 .social-buttons a {
