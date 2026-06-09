@@ -439,3 +439,36 @@ body {
     flex-direction: column;
     margin-bottom: 10px;
 }
+.social-buttons {
+  display: flex;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 18px;
+
+  position: absolute;
+  top: calc(50% + 300px);
+
+  z-index: 20;
+}
+
+.social-buttons a {
+  padding: 10px 18px;
+
+  background: #d8c6f0;
+
+  color: #1c1c1c;
+
+  border: 4px outset #cfcfcf;
+
+  text-decoration: none;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.social-buttons a:active {
+  border: 4px inset #cfcfcf;
+}
