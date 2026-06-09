@@ -5,7 +5,8 @@ body, html {
     height: 100%;
     width: 100%;
     font-family: Bookmania; /* Font from 98.css */
-    overflow-x: hidden;
+    overflow-y: auto;
+overflow-x: hidden;
 }
 
 /* Background image handling */
