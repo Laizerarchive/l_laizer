@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Laizer Archive</title>
 
@@ -48,7 +48,7 @@
 
     .phone-window {
       width: 320px;
-      height: 520px;
+      height: 580px;
 
       background: #cfcfcf;
 
@@ -183,6 +183,8 @@
 
       padding: 8px;
 
+      margin-top: 8px;
+
       border: 4px outset #cfcfcf;
 
       background: #d8c6f0;
@@ -256,8 +258,8 @@
         </button>
 
         <audio id="mainAudioPlayer">
-  <source src="29 apr Earthworm 5 .mp3" type="audio/mpeg">
-</audio>
+          <source src="29 apr Earthworm 5 .mp3" type="audio/mpeg">
+        </audio>
 
       </div>
 
@@ -291,7 +293,21 @@
             Soundcloud
           </a>
 
-          
+        </div>
+
+        <button class="listen-btn" id="socialBtn">
+          SOCIALS
+        </button>
+
+        <div class="platform-links" id="socialLinks">
+
+          <a href="https://www.instagram.com/laizermusic" target="_blank">
+            Instagram
+          </a>
+
+          <a href="https://www.tiktok.com/@laizermusic" target="_blank">
+            TikTok
+          </a>
 
         </div>
 
@@ -300,18 +316,7 @@
     </div>
 
   </div>
-<div class="social-buttons">
 
-  <a href="https://www.instagram.com/laizermusic" target="_blank">
-    Instagram
-  </a>
-
-  <a href="https://www.tiktok.com/@laizermusic"target="_blank">
-    TikTok
-  </a>
-
-</div>
-  </div>
 <script type="module">
 
 import { initializeApp }
@@ -327,7 +332,6 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyAC5ulcLBtrRbmQ4deK1HTOQ5LPSbR7-78",
   authDomain: "laizer-e5803.firebaseapp.com",
@@ -338,11 +342,9 @@ const firebaseConfig = {
   measurementId: "G-6L04YDQTRR"
 };
 
-
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
-
 
 const smsChat =
   document.getElementById("smsChat");
@@ -359,13 +361,17 @@ const listenBtn =
 const platformLinks =
   document.getElementById("platformLinks");
 
+const socialBtn =
+  document.getElementById("socialBtn");
+
+const socialLinks =
+  document.getElementById("socialLinks");
 
 const messagesQuery = query(
   collection(db, "laizerMessages"),
   orderBy("createdAt", "desc"),
   limit(30)
 );
-
 
 onSnapshot(messagesQuery, (snapshot) => {
 
@@ -374,9 +380,7 @@ onSnapshot(messagesQuery, (snapshot) => {
   const messages = [];
 
   snapshot.forEach((doc) => {
-
     messages.push(doc.data());
-
   });
 
   messages.sort(() => Math.random() - 0.5);
@@ -412,7 +416,6 @@ onSnapshot(messagesQuery, (snapshot) => {
 
 });
 
-
 playTrackBtn.addEventListener("click", () => {
 
   if (audio.paused) {
@@ -435,15 +438,15 @@ playTrackBtn.addEventListener("click", () => {
 
 });
 
-
 listenBtn.addEventListener("click", () => {
-
   platformLinks.classList.toggle("active");
+});
 
+socialBtn.addEventListener("click", () => {
+  socialLinks.classList.toggle("active");
 });
 
 </script>
 
 </body>
-
 </html>
