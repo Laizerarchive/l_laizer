@@ -440,10 +440,12 @@ playTrackBtn.addEventListener("click", () => {
 
 streamBtn.addEventListener("click", () => {
   platformLinks.classList.toggle("active");
+  socialLinks.classList.remove("active");
 });
 
 socialBtn.addEventListener("click", () => {
   socialLinks.classList.toggle("active");
+  platformLinks.classList.remove("active");
 });
 
 </script>
